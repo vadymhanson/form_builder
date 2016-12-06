@@ -12,11 +12,11 @@ function loadData(callback) {
 
 function radioChange() {
     var mother = document.querySelector('input[name=mothername]').parentElement;
-    var father = document.querySelector('input[name=fathername]').parentElement
-    if(this.value === "Мужчина") {
+    var father = document.querySelector('input[name=fathername]').parentElement;
+    if(this.childNodes[0].value === "Мужчина") {
         father.classList.add('hidden');
         mother.classList.remove('hidden')
-    } else if (this.value === "Женщина"){
+    } else if (this.childNodes[0].value === "Женщина"){
         mother.classList.add('hidden');
         father.classList.remove('hidden')
     }
@@ -25,59 +25,70 @@ function radioChange() {
 function columnBuilder() {
     var a = document.querySelectorAll('form>div');
 
-    for(i = 0; i < a.length; i++){
+    for(var i = 0; i < a.length; i++){
         var element = a[i];
         if (this.value === "1"){
-            element.classList.add("col-lg-12")
+            element.classList.add("col-lg-12");
+            element.classList.remove("col-lg-6");
+            element.classList.remove("col-lg-4")
         } else if(this.value === "2") {
-            element.classList.add("col-lg-6")
+            element.classList.add("col-lg-6");
+            element.classList.remove("col-lg-12");
+            element.classList.remove("col-lg-4")
         } else if(this.value === "3") {
-            element.classList.add("col-lg-4")
+            element.classList.add("col-lg-4");
+            element.classList.remove("col-lg-12");
+            element.classList.remove("col-lg-6")
         }
     }
+}
+function elementBuilder(element) {
+    var wrapper = document.createElement("div");
+    var body;
+    var label = document.createElement("label");
+    var textLabel = document.createTextNode(element.name);
+    if(element.view === "text"){
+        body = document.createElement("input");
+        body.type = "text";
+        body.id = element.id;
+        body.name = element.name;
+        body.value = element.value;
+        body.classList.add("form-control");
+    } else if(element.view === "radio") {
+        body = document.createElement("div");
+        body.id = "radio-wrapper";
+        body.classList.add("radio");
+        element.options.forEach(function (option) {
+            var wrap = document.createElement("label");
+            var radioLabel = document.createTextNode(option);
+            var radio = document.createElement("input");
+            radio.name = element.name;
+            radio.type = "radio";
+            radio.value = option;
+            wrap.appendChild(radio);
+            wrap.appendChild(radioLabel);
+            body.appendChild(wrap);
+            wrap.classList.add("control-label");
+            wrap.addEventListener("change", radioChange)
+        });
+    }
+
+    body.label = element.label;
+    body.placeholder = element.placeholder;
+    wrapper.classList.add("wrapper");
+    wrapper.classList.add("col-lg-12");
+    wrapper.appendChild(label);
+    wrapper.appendChild(body);
+    label.appendChild(textLabel);
+    label.classList.add("control-label");
+
+    return wrapper
 }
 
 function formBuilder(data) {
     var form = document.createElement("form");
     data.forEach(function(element) {
-        if(element.view === "text") {
-            var wrapper = document.createElement("div");
-            var text = document.createElement("input");
-            var label = document.createElement("label");
-            var textLabel = document.createTextNode(element.name);
-            text.type = "text";
-            text.id = element.id;
-            text.label = element.label;
-            text.name = element.name;
-            text.placeholder = element.placeholder;
-            text.value = element.value;
-            text.classList.add("form-control");
-            label.classList.add("control-label");
-            wrapper.classList.add("wrapper");
-            label.appendChild(textLabel);
-            wrapper.appendChild(label);
-            wrapper.appendChild(text);
-            form.appendChild(wrapper)
-        } if(element.view === "radio") {
-            var wrapper = document.createElement("div");
-            element.options.forEach(function (option) {
-                var radio = document.createElement("input");
-                var label = document.createElement("label");
-                var textLabel = document.createTextNode(option);
-                radio.type = "radio";
-                radio.id = element.id;
-                radio.name = element.name;
-                radio.placeholder = element.placeholder;
-                radio.value = option;
-                label.classList.add("control-label");
-                label.appendChild(radio);
-                label.appendChild(textLabel);
-                wrapper.appendChild(label);
-                radio.addEventListener("change", radioChange)
-            });
-            wrapper.classList.add("wrapper");
-            form.appendChild(wrapper);
-        }
+        form.appendChild(elementBuilder(element));
     });
     
     document.getElementById("form-builder").appendChild(form);
