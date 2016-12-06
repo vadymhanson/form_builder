@@ -24,21 +24,15 @@ function radioChange() {
 
 function columnBuilder() {
     var a = document.querySelectorAll('form>div');
-
     for(var i = 0; i < a.length; i++){
         var element = a[i];
+        element.className = "";
         if (this.value === "1"){
-            element.classList.add("col-lg-12");
-            element.classList.remove("col-lg-6");
-            element.classList.remove("col-lg-4")
+            element.classList.add("col-lg-12");            
         } else if(this.value === "2") {
             element.classList.add("col-lg-6");
-            element.classList.remove("col-lg-12");
-            element.classList.remove("col-lg-4")
         } else if(this.value === "3") {
             element.classList.add("col-lg-4");
-            element.classList.remove("col-lg-12");
-            element.classList.remove("col-lg-6")
         }
     }
 }
@@ -47,6 +41,7 @@ function elementBuilder(element) {
     var body;
     var label = document.createElement("label");
     var textLabel = document.createTextNode(element.name);
+
     if(element.view === "text"){
         body = document.createElement("input");
         body.type = "text";
@@ -71,6 +66,9 @@ function elementBuilder(element) {
             wrap.classList.add("control-label");
             wrap.addEventListener("change", radioChange)
         });
+    }
+    if (body.name === "mothername" || body.name === "fathername") {
+        wrapper.classList.add("hidden");
     }
 
     body.label = element.label;
