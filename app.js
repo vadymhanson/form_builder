@@ -1,29 +1,28 @@
-function ajax() {
+function loadData(callback) {
     var xhr = new XMLHttpRequest();
-
     xhr.open('GET', 'data.json', false);
-
     xhr.send();
 
     if (xhr.status != 200) {
         console.log( xhr.status + ': ' + xhr.statusText );
     } else {
-        formBuilder(JSON.parse(xhr.responseText))
+        callback(JSON.parse(xhr.responseText))
     }
 }
 
 function radioChange() {
+    var mother = document.querySelector('input[name=mothername]').parentElement;
+    var father = document.querySelector('input[name=fathername]').parentElement
     if(this.value === "Мужчина") {
-        document.querySelector('input[name=fathername]').parentElement.classList.add('hidden');
-        document.querySelector('input[name=mothername]').parentElement.classList.remove('hidden')
+        father.classList.add('hidden');
+        mother.classList.remove('hidden')
     } else if (this.value === "Женщина"){
-        document.querySelector('input[name=mothername]').parentElement.classList.add('hidden');
-        document.querySelector('input[name=fathername]').parentElement.classList.remove('hidden')
+        mother.classList.add('hidden');
+        father.classList.remove('hidden')
     }
 }
 
 function columnBuilder() {
-
     var a = document.querySelectorAll('form>div');
 
     for(i = 0; i < a.length; i++){
@@ -78,12 +77,12 @@ function formBuilder(data) {
             });
             wrapper.classList.add("wrapper");
             form.appendChild(wrapper);
-
         }
     });
+    
     document.getElementById("form-builder").appendChild(form);
 }
 
 document.getElementById("column-build").addEventListener("change", columnBuilder);
 
-ajax();
+loadData(formBuilder);
