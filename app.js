@@ -23,18 +23,20 @@ function radioChange() {
 }
 
 function columnBuilder() {
-    var a = document.querySelectorAll('form>div');
-    for(var i = 0; i < a.length; i++){
-        var element = a[i];
+    var array = document.querySelectorAll('form>div');
+    var elementValue =this.value;
+
+    [].forEach.call(array, function(element) {
         element.className = "";
-        if (this.value === "1"){
-            element.classList.add("col-lg-12");            
-        } else if(this.value === "2") {
+        if (elementValue === "1"){
+            element.classList.add("col-lg-12");
+        } else if(elementValue === "2") {
             element.classList.add("col-lg-6");
-        } else if(this.value === "3") {
+        } else if(elementValue === "3") {
             element.classList.add("col-lg-4");
         }
-    }
+    });
+
 }
 function elementBuilder(element) {
     var wrapper = document.createElement("div");
